@@ -86,11 +86,26 @@ class User {
   /** get user's favorite stories from API */
 
   async getFavoriteStories() {
-    const response = await axios.get(`${BASE_URL}/users/${this.username}/favorites`, {
-      params: { token: this.loginToken },
-    });
-    this.favorites = response.data.user.favorites.map(s => new Story(s));
-  }
+
+    try {
+   
+      const response = await axios.get(`${BASE_URL}/users/${this.username}/favorites`, {
+   
+        params: { token: this.loginToken },
+   
+      });
+   
+      console.log(response.data); // Debugging: log the response data
+   
+      this.favorites = response.data.user.favorites.map(s => new Story(s));
+   
+    } catch (error) {
+   
+      console.error('Error fetching favorite stories:', error.response ? error.response.data : error.message);
+   
+    }
+   
+   }
 
   /** add story to user's favorites */
 
