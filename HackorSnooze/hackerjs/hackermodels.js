@@ -106,20 +106,54 @@ class User {
     }
    
    }
+   
+/** Add a story to the user's favorites */
 
-  /** add story to user's favorites */
+async addFavorite(storyId) {
 
-  async addFavorite(story) {
-    this.favorites.push(story);
-    await this._toggleFavorite(story);
+  try {
+ 
+    const response = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, null, {
+ 
+      params: { token: this.loginToken },
+ 
+    });
+ 
+    console.log('Added favorite story response:', response.data); // Log response data
+ 
+    this.favorites.push(new Story(response.data.story));
+ 
+  } catch (error) {
+ 
+    console.error('Error adding favorite story:', error.response ? error.response.data : error.message);
+ 
   }
-
-  /** remove story from user's favorites */
-
-  async removeFavorite(story) {
-    this.favorites = this.favorites.filter(s => s.storyId !== story.storyId);
-    await this._toggleFavorite(story);
+ 
+ }
+ 
+ /** Remove a story from the user's favorites */
+ 
+ async removeFavorite(storyId) {
+ 
+  try {
+ 
+    const response = await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {
+ 
+      params: { token: this.loginToken },
+ 
+    });
+ 
+    console.log('Removed favorite story response:', response.data); // Log response data
+ 
+    this.favorites = this.favorites.filter(s => s.storyId !== storyId);
+ 
+  } catch (error) {
+ 
+    console.error('Error removing favorite story:', error.response ? error.response.data : error.message);
+ 
   }
+ 
+ }
 
   /** determine if given story is a favorite of user */
 
